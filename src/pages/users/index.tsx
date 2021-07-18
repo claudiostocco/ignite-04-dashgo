@@ -1,37 +1,48 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from "@chakra-ui/react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import Link from 'next/link';
 
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { SideBar } from "../../components/SideBar";
 
 export default function UserList() {
+    const isLGScreen = useBreakpointValue({
+        base: false,
+        lg: true
+    })
+    const isMDScreen = useBreakpointValue({
+        base: false,
+        md: true
+    })
     return (
         <Box>
             <Header />
             <Flex w="100%" my="6" maxW={1480} mx="auto" px="6">
                 <SideBar />
-                <Box flex="1" borderRadius={8} bg="gray.800" p="8">
+                <Box flex="1" borderRadius={8} bg="gray.800" p={["4","8"]}>
                     <Flex mb="8" justify="space-between" align="center">
                         <Heading size="lg" fontWeight="normal">Usuários</Heading>
-                        <Button as="a" size="sm" fontSize="sm" colorScheme="pink" leftIcon={<Icon as={RiAddLine} fontSize="20" />}>
-                            Criar novo
-                        </Button>
+                        <Link href="/users/create" passHref>
+                            <Button as="a" size="sm" fontSize="sm" colorScheme="pink" leftIcon={<Icon as={RiAddLine} fontSize="20" />}>
+                                Criar novo
+                            </Button>
+                        </Link>
                     </Flex>
                     <Table colorScheme="whiteAlpha">
                         <Thead>
                             <Tr>
-                                <Th px="6" color="gray.300" w="8">
+                                <Th px={["2","4","6"]} color="gray.300" w="8">
                                     <Checkbox colorScheme="pink" />
                                 </Th>
                                 <Th>Usuário</Th>
-                                <Th>Data de cadastro</Th>
-                                <Th w="8"></Th>
+                                {isMDScreen && (<Th>Data de cadastro</Th>)}
+                                <Th px={["1","4","6"]} w="8"></Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             <Tr>
-                                <Td px="6">
+                                <Td px={["2","4","6"]}>
                                     <Checkbox colorScheme="pink" />
                                 </Td>
                                 <Td>
@@ -40,10 +51,17 @@ export default function UserList() {
                                         <Text color="gray.300" fontSize="sm">claudiostocco@gmail.com</Text>
                                     </Box>
                                 </Td>
-                                <Td>21/03/2021</Td>
-                                <Td>
-                                    <Button as="a" size="sm" fontSize="sm" colorScheme="purple" leftIcon={<Icon as={RiPencilLine} fontSize="16" />}>
-                                        Editar
+                                {isMDScreen && (<Td>21/03/2021</Td>)}
+                                <Td px={["1","4","6"]}>
+                                    <Button
+                                        as="a"
+                                        size="sm"
+                                        fontSize="sm"
+                                        colorScheme="purple"
+                                        iconSpacing={isLGScreen ? 2 : 0}
+                                        leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                                    >
+                                        {isLGScreen && 'Editar'}
                                     </Button>
                                 </Td>
                             </Tr>
