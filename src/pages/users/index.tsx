@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { SideBar } from "../../components/SideBar";
-import { useEffect } from "react";
-import { useQuery } from 'react-query';
+import { useUsers } from "../../services/hooks/useUsers";
 
 export default function UserList() {
     const isLGScreen = useBreakpointValue({
@@ -18,11 +17,7 @@ export default function UserList() {
         md: true
     })
 
-    const { data, isLoading, error } = useQuery('users',async () => {
-        const response = await fetch('http://localhost:3000/api/users');
-        const data = await response.json();
-        return data;
-    });
+    const { data, isLoading, isFetching , error } = useUsers();
 
     return (
         <Box>
@@ -31,7 +26,10 @@ export default function UserList() {
                 <SideBar />
                 <Box flex="1" borderRadius={8} bg="gray.800" p={["4","8"]}>
                     <Flex mb="8" justify="space-between" align="center">
-                        <Heading size="lg" fontWeight="normal">Usuários</Heading>
+                        <Heading size="lg" fontWeight="normal">
+                            Usuários
+                            {!isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" />}
+                        </Heading>
                         <Link href="/users/create" passHref>
                             <Button as="a" size="sm" fontSize="sm" colorScheme="pink" leftIcon={<Icon as={RiAddLine} fontSize="20" />}>
                                 Criar novo
@@ -39,11 +37,11 @@ export default function UserList() {
                         </Link>
                     </Flex>
                     {isLoading ? (
-                        <Flex justify="center">
+                        <Flex justify="center" align="flex-end" h={100}>
                             <Spinner />
                         </Flex>
                     ) : error ? (
-                        <Flex justify="center">
+                        <Flex justify="center" align="flex-end" h={100}>
                             <Text>Falha ao obter dados do usuário!</Text>
                         </Flex>
                     ) : (
@@ -55,12 +53,12 @@ export default function UserList() {
                                             <Checkbox colorScheme="pink" />
                                         </Th>
                                         <Th>Usuário</Th>
-                                        {isMDScreen && (<Th>Data de cadastro</Th>)}
+                                        {isMDScreen && (<Th>Data cadastro</Th>)}
                                         <Th px={["1","4","6"]} w="8"></Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {data.users.map(user => (
+                                    {data.map(user => (
                                         <Tr key={user.id}>
                                             <Td px={["2","4","6"]}>
                                                 <Checkbox colorScheme="pink" />
