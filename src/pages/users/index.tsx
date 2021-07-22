@@ -1,10 +1,12 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from "@chakra-ui/react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import Link from 'next/link';
 
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { SideBar } from "../../components/SideBar";
+import { useEffect } from "react";
+import { useQuery } from 'react-query';
 
 export default function UserList() {
     const isLGScreen = useBreakpointValue({
@@ -15,6 +17,13 @@ export default function UserList() {
         base: false,
         md: true
     })
+
+    const { data, isLoading, error } = useQuery('users',async () => {
+        const response = await fetch('http://localhost:3000/api/users');
+        const data = await response.json();
+        return data;
+    });
+
     return (
         <Box>
             <Header />
@@ -29,45 +38,59 @@ export default function UserList() {
                             </Button>
                         </Link>
                     </Flex>
-                    <Table colorScheme="whiteAlpha">
-                        <Thead>
-                            <Tr>
-                                <Th px={["2","4","6"]} color="gray.300" w="8">
-                                    <Checkbox colorScheme="pink" />
-                                </Th>
-                                <Th>Usuário</Th>
-                                {isMDScreen && (<Th>Data de cadastro</Th>)}
-                                <Th px={["1","4","6"]} w="8"></Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            <Tr>
-                                <Td px={["2","4","6"]}>
-                                    <Checkbox colorScheme="pink" />
-                                </Td>
-                                <Td>
-                                    <Box>
-                                        <Text fontWeight="bold">Claudio Marcio Stocco</Text>
-                                        <Text color="gray.300" fontSize="sm">claudiostocco@gmail.com</Text>
-                                    </Box>
-                                </Td>
-                                {isMDScreen && (<Td>21/03/2021</Td>)}
-                                <Td px={["1","4","6"]}>
-                                    <Button
-                                        as="a"
-                                        size="sm"
-                                        fontSize="sm"
-                                        colorScheme="purple"
-                                        iconSpacing={isLGScreen ? 2 : 0}
-                                        leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                                    >
-                                        {isLGScreen && 'Editar'}
-                                    </Button>
-                                </Td>
-                            </Tr>
-                        </Tbody>
-                    </Table>
-                    <Pagination />
+                    {isLoading ? (
+                        <Flex justify="center">
+                            <Spinner />
+                        </Flex>
+                    ) : error ? (
+                        <Flex justify="center">
+                            <Text>Falha ao obter dados do usuário!</Text>
+                        </Flex>
+                    ) : (
+                        <>
+                            <Table colorScheme="whiteAlpha">
+                                <Thead>
+                                    <Tr>
+                                        <Th px={["2","4","6"]} color="gray.300" w="8">
+                                            <Checkbox colorScheme="pink" />
+                                        </Th>
+                                        <Th>Usuário</Th>
+                                        {isMDScreen && (<Th>Data de cadastro</Th>)}
+                                        <Th px={["1","4","6"]} w="8"></Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {data.users.map(user => (
+                                        <Tr key={user.id}>
+                                            <Td px={["2","4","6"]}>
+                                                <Checkbox colorScheme="pink" />
+                                            </Td>
+                                            <Td>
+                                                <Box>
+                                                    <Text fontWeight="bold">{user.name}</Text>
+                                                    <Text color="gray.300" fontSize="sm">{user.email}</Text>
+                                                </Box>
+                                            </Td>
+                                            {isMDScreen && (<Td>{user.createdAt}</Td>)}
+                                            <Td px={["1","4","6"]}>
+                                                <Button
+                                                    as="a"
+                                                    size="sm"
+                                                    fontSize="sm"
+                                                    colorScheme="purple"
+                                                    iconSpacing={isLGScreen ? 2 : 0}
+                                                    leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                                                >
+                                                    {isLGScreen && 'Editar'}
+                                                </Button>
+                                            </Td>
+                                        </Tr>
+                                    ))}
+                                </Tbody>
+                            </Table>
+                            <Pagination />
+                        </>
+                    )}
                 </Box>
             </Flex>
         </Box>
