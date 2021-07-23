@@ -33,6 +33,7 @@ export default function UserList() {
         });
     }
 
+    // const { data, isLoading, isFetching , error } = useUsers(page, users);
     // const { data, isLoading, isFetching , error } = useUsers(page, {
     //     initialData: usersData,
     // });
@@ -121,10 +122,10 @@ export default function UserList() {
 }
 
 // export const getServerSideProps: GetServerSideProps = async () => {
-//    const { usersData, totalCount } = await getUsers(1);
+//    const users = await getUsers(1);
 //     return {
 //         props: {
-//             usersData: {},
+//             users
 //         }
 //     }
 // }

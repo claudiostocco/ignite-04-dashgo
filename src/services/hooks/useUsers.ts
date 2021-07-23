@@ -43,9 +43,10 @@ export function useUsers(page: number) {
         staleTime: 30 * 1000, //30 seconds
     });
 }
-// export function useUsers(page: number, options?: UseQueryOptions) {
+// export function useUsers(page: number, initialData: GetUserResponse, options?: UseQueryOptions) {
 //     return useQuery(['users', page],() => getUsers(page), {
 //         staleTime: 30 * 1000, //30 seconds
+//         initialData,
 //         ...options,
 //     });
 // }
