@@ -10,3 +10,6 @@ Desenvolvido usando:
  - ReactJS/JSX
  - Chakra-UI.
  - TypeScript
+
+## Para baixar o Back-End de autenticação.
+https://github.com/rocketseat-education/ignite-reactjs-auth-backend

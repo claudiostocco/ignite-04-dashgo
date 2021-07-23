@@ -1,11 +1,12 @@
 import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Link as ChakraLink } from "@chakra-ui/react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import Link from 'next/link';
+import { GetServerSideProps } from "next";
 
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { SideBar } from "../../components/SideBar";
-import { useUsers } from "../../services/hooks/useUsers";
+import { useUsers, getUsers } from "../../services/hooks/useUsers";
 import { useState } from "react";
 import { queryClient } from "../../services/queryClient";
 import { api } from "../../services/api";
@@ -22,7 +23,7 @@ export default function UserList() {
         md: true
     })
 
-    async function handlePrefetchUser(userId: number) {
+    async function handlePrefetchUser(userId: string) {
         await queryClient.prefetchQuery(['user', userId], async () => {
             const response = await api.get(`/users/${userId}`);
 
@@ -32,6 +33,9 @@ export default function UserList() {
         });
     }
 
+    // const { data, isLoading, isFetching , error } = useUsers(page, {
+    //     initialData: usersData,
+    // });
     const { data, isLoading, isFetching , error } = useUsers(page);
 
     return (
@@ -115,3 +119,12 @@ export default function UserList() {
         </Box>
     )
 }
+
+// export const getServerSideProps: GetServerSideProps = async () => {
+//    const { usersData, totalCount } = await getUsers(1);
+//     return {
+//         props: {
+//             usersData: {},
+//         }
+//     }
+// }

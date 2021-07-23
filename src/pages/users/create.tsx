@@ -3,10 +3,14 @@ import Link from 'next/link';
 import * as yup from 'yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from "react-query";
+import { useRouter } from "next/router";
 
 import { Header } from "../../components/Header";
 import { SideBar } from "../../components/SideBar";
 import { Input } from '../../components/Form/Input'
+import { api } from "../../services/api";
+import { queryClient } from "../../services/queryClient";
 
 type CreateUserFormData = {
     name: string
@@ -25,14 +29,36 @@ type CreateUserFormData = {
   })
   
   export default function UserList() {
+    const router = useRouter();  
     const { formState, handleSubmit, register } = useForm({
         resolver: yupResolver(createUserFormSchema)
     });
     const { errors } = formState;
+    const createUser = useMutation(async (user: CreateUserFormData) => {
+        try {
+            const response = await api.post('user', {
+                user: {
+                    ...user,
+                    createdAt: new Date(),
+                }
+            });            
+            return response.data.user;
+        } catch (error) {
+            console.log('catch', error);
+        }
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('users');
+        }
+    })
 
     const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
-        await new Promise(resolve => setTimeout(resolve,1200));
-        console.log(values);
+        await createUser.mutateAsync(values);
+        if (createUser.isSuccess) {
+            router.push('/users');
+        } else {
+            alert('Erro ao inserir usuário!');
+        }
     }
 
     return (

@@ -17,7 +17,7 @@ function generatePagesArray(from: number, to: number) {
 }
 
 export function Pagination({ totalOfRegisters, perPage = 10, currentPage = 1, onPageChange }: PaginationProps) {
-    const lastPage = Math.floor(totalOfRegisters / perPage);
+    const lastPage = Math.ceil(totalOfRegisters / perPage);
     const previuosPages = currentPage > 1 
         ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
         : [];
@@ -35,7 +35,9 @@ export function Pagination({ totalOfRegisters, perPage = 10, currentPage = 1, on
             align="center"
         >
             <Box>
-                <strong>0</strong> - <strong>10</strong> de <strong>100</strong>
+                <strong>{perPage * (currentPage - 1) + 1}</strong> - <strong>{perPage * (currentPage - 1) + perPage}</strong> de <strong>{totalOfRegisters}</strong>
+                <br />
+                <strong>{lastPage}</strong>
             </Box>
             <Stack direction="row" spacing="2">
                 {currentPage > (1 + siblingsCount) && (
