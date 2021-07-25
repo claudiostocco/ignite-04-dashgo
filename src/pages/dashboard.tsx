@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 import { SideBar } from "../components/SideBar";
 
 const options = {
@@ -90,6 +91,7 @@ export default function Dashboard() {
                     </Box>
                 </SimpleGrid>
             </Flex>
+            <Footer />
         </Flex>
     )
 }
