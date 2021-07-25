@@ -5,6 +5,9 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { SideBar } from "../components/SideBar";
+import { withSSRAuth } from "../utils/withSSRAuth";
+import { setupAPIClient } from "../services/api";
+import { RefreshTokenError } from "../services/errors/RefreshTokenError";
 
 const options = {
     chart: {
@@ -67,24 +70,24 @@ export default function Dashboard() {
                 my="6"
                 maxW={1480}
                 mx="auto"
-                px={["4","6"]}
+                px={["4", "6"]}
             >
                 <SideBar />
                 <SimpleGrid flex="1" gap="4" minChildWidth={320} align="flex-start">
                     <Box
-                        p={["4","8"]}
+                        p={["4", "8"]}
                         bg="gray.800"
                         borderRadius={8}
-                        pb={["1","4"]}
+                        pb={["1", "4"]}
                     >
                         <Text fontSize="lg" mb="4">Inscritos da semana</Text>
                         <Chart options={options} series={series} type="area" height={160} />
                     </Box>
                     <Box
-                        p={["4","8"]}
+                        p={["4", "8"]}
                         bg="gray.800"
                         borderRadius={8}
-                        pb={["1","4"]}
+                        pb={["1", "4"]}
                     >
                         <Text fontSize="lg" mb="4">Taxa de abertura</Text>
                         <Chart options={options} series={series} type="area" height={160} />
@@ -95,3 +98,13 @@ export default function Dashboard() {
         </Flex>
     )
 }
+
+export const getServerSideProps = withSSRAuth(async ctx => {
+    const apiClient = setupAPIClient(ctx);
+    const response = await apiClient.get('/me');
+    console.log(response.data);
+
+    return {
+        props: {}
+    }
+})

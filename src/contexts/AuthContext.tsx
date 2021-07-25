@@ -29,7 +29,9 @@ export function signOut() {
     destroyCookie(undefined, 'dashgo.token');
     destroyCookie(undefined, 'dashgo.refreshToken');
 
-    Router.push('/');
+    if (process.browser) {
+        Router.push('/');
+    }
 }
 
 export const AuthContext = createContext({} as AuthContextData);
@@ -56,7 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     },[]);
 
     async function signIn({ email, password }: SignInCredentials) {
-        console.log({email, password});
+        // console.log({email, password});
         try {
             const response = await apiAuth.post('/sessions', {
                 email,

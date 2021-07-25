@@ -8,15 +8,15 @@ export function Footer() {
     const [ testMsg, setTestMsg ] = useState('');
     const [ version, setVersion ] = useState('');
 
-    useEffect(() => {
-        apiAuth.get('/test')
-        .then(response => setTestMsg(response.data.test))
-        .catch(error => console.log(error));
+    // useEffect(() => {
+    //     apiAuth.get('/test')
+    //     .then(response => setTestMsg(response.data.test))
+    //     .catch(error => console.log(error));
 
-        apiAuth.get('/version')
-        .then(response => setVersion(response.data.version))
-        .catch(error => console.log(error));
-    },[]);
+    //     apiAuth.get('/version')
+    //     .then(response => setVersion(response.data.version))
+    //     .catch(error => console.log(error));
+    // },[]);
 
     return (
         <Flex
