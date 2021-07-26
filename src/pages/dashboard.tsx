@@ -7,7 +7,6 @@ import { Footer } from "../components/Footer";
 import { SideBar } from "../components/SideBar";
 import { withSSRAuth } from "../utils/withSSRAuth";
 import { setupAPIClient } from "../services/api";
-import { RefreshTokenError } from "../services/errors/RefreshTokenError";
 
 const options = {
     chart: {

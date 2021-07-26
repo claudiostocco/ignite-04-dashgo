@@ -1,12 +1,23 @@
 import { Flex, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { signOut } from '../../contexts/AuthContext';
 
 import { apiAuth } from '../../services/api';
+import { useCan } from '../../services/hooks/useCan';
+import { UserCan } from '../UserCan';
 
 export function Footer() {
-    const [ testMsg, setTestMsg ] = useState('');
-    const [ version, setVersion ] = useState('');
+    const [testMsg, setTestMsg] = useState('');
+    const [version, setVersion] = useState('');
+
+    const hasMetricsPermitions = useCan({
+        permissions: ['metrics.list']
+    });
+
+    const hasMetricsRoles = useCan({
+        roles: ['administrator', 'editor']
+    })
 
     // useEffect(() => {
     //     apiAuth.get('/test')
@@ -29,18 +40,25 @@ export function Footer() {
             px="6"
             align="center"
         >
-            <Text
-                align="center"
-                mx="auto"
-            >
-                Versão: {version}
-            </Text>
-            <Text
-                align="center"
-                mx="auto"
-            >
-                Teste: {testMsg}
-            </Text>
+            <UserCan permissions={['metrics.list']} roles={['administrator', 'editor']}>
+                <Text
+                    align="center"
+                    mx="auto"
+                >
+                    Versão: {version}
+                </Text>
+            </UserCan>
+
+            <UserCan permissions={['metrics.list']}>
+                <Text
+                    align="center"
+                    mx="auto"
+                >
+                    Teste: {testMsg}
+                </Text>
+            </UserCan>
+
+            <button onClick={signOut}>Logout</button>
         </Flex>
     )
 }
