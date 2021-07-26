@@ -1,13 +1,14 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
-import { signOut } from '../../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import { apiAuth } from '../../services/api';
 import { useCan } from '../../services/hooks/useCan';
 import { UserCan } from '../UserCan';
 
 export function Footer() {
+    const { signOut } = useContext(AuthContext);
     const [testMsg, setTestMsg] = useState('');
     const [version, setVersion] = useState('');
 
