@@ -32,9 +32,9 @@ export function signOut() {
     destroyCookie(undefined, 'dashgo.token');
     destroyCookie(undefined, 'dashgo.refreshToken');
 
-    authChannel.postMessage('signOut');
-
+    
     if (process.browser) {
+        authChannel.postMessage('signOut');
         Router.push('/');
     }
 }
